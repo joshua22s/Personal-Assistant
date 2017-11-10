@@ -1,4 +1,4 @@
-package main
+package calendarsource
 
 import (
 	"encoding/json"
@@ -10,6 +10,7 @@ import (
 	"os"
 	"os/user"
 	"path/filepath"
+	"strconv"
 	"time"
 
 	"golang.org/x/net/context"
@@ -18,8 +19,24 @@ import (
 	"google.golang.org/api/calendar/v3"
 )
 
-// getClient uses a Context and Config to retrieve a Token
-// then generate a Client. It returns the generated Client.
+var (
+	client *http.Client
+)
+
+func Start() {
+	ctx := context.Background()
+	b, err := ioutil.ReadFile("client_secret.json")
+	if err != nil {
+		log.Fatalf("Unable to read client secret file: %v", err)
+	}
+
+	config, err := google.ConfigFromJSON(b, calendar.CalendarReadonlyScope)
+	if err != nil {
+		log.Fatalf("Unable to parse client secret file to config: %v", err)
+	}
+	client = getClient(ctx, config)
+}
+
 func getClient(ctx context.Context, config *oauth2.Config) *http.Client {
 	cacheFile, err := tokenCacheFile()
 	if err != nil {
@@ -33,8 +50,6 @@ func getClient(ctx context.Context, config *oauth2.Config) *http.Client {
 	return config.Client(ctx, tok)
 }
 
-// getTokenFromWeb uses Config to request a Token.
-// It returns the retrieved Token.
 func getTokenFromWeb(config *oauth2.Config) *oauth2.Token {
 	authURL := config.AuthCodeURL("state-token", oauth2.AccessTypeOffline)
 	fmt.Printf("Go to the following link in your browser then type the "+
@@ -52,8 +67,6 @@ func getTokenFromWeb(config *oauth2.Config) *oauth2.Token {
 	return tok
 }
 
-// tokenCacheFile generates credential file path/filename.
-// It returns the generated credential path/filename.
 func tokenCacheFile() (string, error) {
 	usr, err := user.Current()
 	if err != nil {
@@ -65,8 +78,6 @@ func tokenCacheFile() (string, error) {
 		url.QueryEscape("calendar-go-quickstart.json")), err
 }
 
-// tokenFromFile retrieves a Token from a given file path.
-// It returns the retrieved Token and any read error encountered.
 func tokenFromFile(file string) (*oauth2.Token, error) {
 	f, err := os.Open(file)
 	if err != nil {
@@ -78,8 +89,6 @@ func tokenFromFile(file string) (*oauth2.Token, error) {
 	return t, err
 }
 
-// saveToken uses a file path to create a file and store the
-// token in it.
 func saveToken(file string, token *oauth2.Token) {
 	fmt.Printf("Saving credential file to: %s\n", file)
 	f, err := os.OpenFile(file, os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0600)
@@ -90,22 +99,7 @@ func saveToken(file string, token *oauth2.Token) {
 	json.NewEncoder(f).Encode(token)
 }
 
-func StartGoogleCalendarController() {
-	ctx := context.Background()
-
-	b, err := ioutil.ReadFile("client_secret.json")
-	if err != nil {
-		log.Fatalf("Unable to read client secret file: %v", err)
-	}
-
-	// If modifying these scopes, delete your previously saved credentials
-	// at ~/.credentials/calendar-go-quickstart.json
-	config, err := google.ConfigFromJSON(b, calendar.CalendarReadonlyScope)
-	if err != nil {
-		log.Fatalf("Unable to parse client secret file to config: %v", err)
-	}
-	client := getClient(ctx, config)
-
+func GetUpcomingEvents() {
 	srv, err := calendar.New(client)
 	if err != nil {
 		log.Fatalf("Unable to retrieve calendar Client %v", err)
@@ -134,5 +128,45 @@ func StartGoogleCalendarController() {
 	} else {
 		fmt.Printf("No upcoming events found.\n")
 	}
+}
 
+func GetAppointments(startTime time.Time, endTime time.Time) []Appointment {
+	srv, err := calendar.New(client)
+	if err != nil {
+		log.Fatalf("Unable to retrieve calendar Client %v", err)
+	}
+
+	var appointments []Appointment
+
+	events, err := srv.Events.List("primary").ShowDeleted(false).SingleEvents(true).TimeMin(formatTime(startTime, "normal")).TimeMax(formatTime(endTime, "normal")).Do()
+	if len(events.Items) > 0 {
+		for _, event := range events.Items {
+			if event.Start.DateTime != "" {
+				start, err := time.Parse(time.RFC3339, event.Start.DateTime)
+				if err != nil {
+					log.Fatalf("Unable to parse start time of event %v", event)
+				}
+				end, err := time.Parse(time.RFC3339, event.End.DateTime)
+				if err != nil {
+					log.Fatalf("Unable to parse end time of event %v", event)
+				}
+				appointments = append(appointments, Appointment{event.Summary, event.Description, start, end, event.Location})
+			}
+		}
+	}
+	return appointments
+}
+
+func formatTime(toFormat time.Time, state string) string {
+	var timeFormatted string
+	if state == "start" {
+		timeFormatted = strconv.Itoa(toFormat.Year()) + "-" + strconv.Itoa(int(toFormat.Month())) + "-" + strconv.Itoa(toFormat.Day()) + "T00:00:00Z"
+	} else if state == "end" {
+		timeFormatted = strconv.Itoa(toFormat.Year()) + "-" + strconv.Itoa(int(toFormat.Month())) + "-" + strconv.Itoa((toFormat.Day() + 1)) + "T00:00:00Z"
+	} else if state == "normal" {
+		timeFormatted = toFormat.Format(time.RFC3339)
+	} else {
+		timeFormatted = "error"
+	}
+	return timeFormatted
 }

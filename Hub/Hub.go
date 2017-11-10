@@ -2,8 +2,12 @@ package main
 
 import (
 	"fmt"
+	"time"
+
+	calendar "github.com/joshua22s/Personal-Assistant/CalendarSource"
 )
 
 func main() {
-	fmt.Println("Hello World!")
+	calendar.Start()
+	fmt.Println(calendar.GetAppointments(time.Now(), time.Now().Add(time.Hour*24)))
 }

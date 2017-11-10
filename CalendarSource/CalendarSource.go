@@ -1,5 +1,5 @@
-package main
+package calendarsource
 
-func main() {
-	StartGoogleCalendarController()
+func unused() {
+
 }
