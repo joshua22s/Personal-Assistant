@@ -14,4 +14,5 @@ func main() {
 	fmt.Println(appointments)
 	traffic.Start(getMapsKey())
 	fmt.Println(traffic.GetTravelTime("Hoogstraat 39, Beringe", appointments[0].Location, "driving", appointments[0].StartTime))
+	startWebServer()
 }
