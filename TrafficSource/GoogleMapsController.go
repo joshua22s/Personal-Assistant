@@ -8,8 +8,6 @@ import (
 	"googlemaps.github.io/maps"
 )
 
-//mapsKey := "AIzaSyCpzAr66Qjbb_ZOthm2VI6AWrvbCPPTbMk"
-
 var (
 	client *maps.Client
 )
