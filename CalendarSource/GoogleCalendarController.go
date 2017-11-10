@@ -24,8 +24,12 @@ var (
 )
 
 func Start() {
+	usr, err := user.Current()
+	if err != nil {
+		log.Fatalf("Unable to get current user: %v", err)
+	}
 	ctx := context.Background()
-	b, err := ioutil.ReadFile("client_secret.json")
+	b, err := ioutil.ReadFile(usr.HomeDir + "/client_secret.json")
 	if err != nil {
 		log.Fatalf("Unable to read client secret file: %v", err)
 	}
