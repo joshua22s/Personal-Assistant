@@ -14,12 +14,12 @@ var (
 	client *maps.Client
 )
 
-func Start() {
-	client = getClient()
+func Start(mapskey string) {
+	client = getClient(mapskey)
 }
 
-func getClient() *maps.Client {
-	clnt, err := maps.NewClient(maps.WithAPIKey("AIzaSyCpzAr66Qjbb_ZOthm2VI6AWrvbCPPTbMk"))
+func getClient(mapskey string) *maps.Client {
+	clnt, err := maps.NewClient(maps.WithAPIKey(mapskey))
 	if err != nil {
 		log.Fatalf("Unable to create maps client: %v", err)
 	}

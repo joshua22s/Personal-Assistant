@@ -12,6 +12,6 @@ func main() {
 	calendar.Start()
 	appointments := calendar.GetAppointments(time.Now(), time.Now().Add(time.Hour*24))
 	fmt.Println(appointments)
-	traffic.Start()
+	traffic.Start(getMapsKey())
 	fmt.Println(traffic.GetTravelTime("Hoogstraat 39, Beringe", appointments[0].Location, "driving", appointments[0].StartTime))
 }
