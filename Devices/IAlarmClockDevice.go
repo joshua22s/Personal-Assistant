@@ -5,5 +5,6 @@ import (
 )
 
 type IAlarmClockDevice interface {
-	func setTime(time time.Time)
+	GetName() string
+	SetTime(time time.Time)
 }

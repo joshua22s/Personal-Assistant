@@ -5,10 +5,11 @@ import (
 	"log"
 	"os/user"
 
+	devices "github.com/joshua22s/Personal-Assistant/Devices"
 	_ "github.com/mattn/go-sqlite3"
 )
 
-func getMapsKey() string {
+func getConnection() *sql.DB {
 	usr, err := user.Current()
 	if err != nil {
 		log.Fatalf("Unable to get current user: %v", err)
@@ -17,6 +18,11 @@ func getMapsKey() string {
 	if err != nil {
 		log.Fatal(err)
 	}
+	return db
+}
+
+func getMapsKey() string {
+	db := getConnection()
 	defer db.Close()
 	stmt, err := db.Prepare("SELECT value FROM settings WHERE name = 'mapskey'")
 	if err != nil {
@@ -29,4 +35,26 @@ func getMapsKey() string {
 		log.Fatal(err)
 	}
 	return value
+}
+
+func getDevices() ([]devices.IAlarmClockDevice, []devices.IBlindDevice, []devices.IClimateDevice, []devices.ILightingDevice) {
+	var (
+		alarmclocks []devices.IAlarmClockDevice
+		blinds      []devices.IBlindDevice
+		climates    []devices.IClimateDevice
+		lightings   []devices.ILightingDevice
+	)
+	db := getConnection()
+	defer db.Close()
+	rows, err := db.Query("SELECT * FROM device")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer rows.Close()
+	for rows.Next() {
+		//TODO figure out how to read different devices from database
+		err = rows.Scan()
+	}
+
+	return alarmclocks, blinds, climates, lightings
 }

@@ -1,5 +1,5 @@
 package devices
 
-type IBlindDevice interface {
+type IDevice interface {
 	getName() string
 }

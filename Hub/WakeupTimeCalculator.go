@@ -1,13 +1,13 @@
 package main
 
-import (
-	"fmt"
-	"time"
+//import (
+//	"fmt"
+//	"time"
 
-	calendar "github.com/joshua22s/Personal-Assistant/calendarsource"
-	traffic "github.com/joshua22s/Personal-Assistant/trafficsource"
-)
+//	calendar "github.com/joshua22s/Personal-Assistant/calendarsource"
+//	traffic "github.com/joshua22s/Personal-Assistant/trafficsource"
+//)
 
-func calculateWakeUpTime() {
+//func calculateWakeUpTime() {
 
-}
+//}
