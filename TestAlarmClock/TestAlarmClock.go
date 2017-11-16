@@ -1,4 +1,4 @@
-package devices
+package testalarmclock
 
 import (
 	"bytes"
@@ -9,23 +9,17 @@ import (
 	"time"
 )
 
-//type IAlarmClockDevice interface {
-//	getName() string
-//	setTime(time time.Time)
-//}
-
-//inherits Device.go, implements IAlarmClockDevice.go
-type TestAlarmClockDevice struct {
+type TestAlarmClock struct {
 	Name      string
 	IpAddress string
 }
 
-func (this TestAlarmClockDevice) GetName() string {
+func (this TestAlarmClock) GetName() string {
 	return this.Name
 }
 
-func (this TestAlarmClockDevice) SetTime(timeToSend time.Time) {
-	fmt.Println("name: ", this.Name, " ip: ", this.IpAddress, " time: ", timeToSend)
+func (this TestAlarmClock) SetTime(timeToSend time.Time) {
+	fmt.Println("Time to start:", timeToSend)
 	jsonData := timeToSend.Format(time.RFC3339)
 	jsonValue, err := json.Marshal(jsonData)
 	if err != nil {

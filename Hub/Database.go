@@ -5,7 +5,6 @@ import (
 	"log"
 	"os/user"
 
-	devices "github.com/joshua22s/Personal-Assistant/Devices"
 	_ "github.com/mattn/go-sqlite3"
 )
 
@@ -37,12 +36,12 @@ func getMapsKey() string {
 	return value
 }
 
-func getDevices() ([]devices.IAlarmClockDevice, []devices.IBlindDevice, []devices.IClimateDevice, []devices.ILightingDevice) {
+func getDevices() ([]IAlarmClockDevice, []IBlindDevice, []IClimateDevice, []ILightingDevice) {
 	var (
-		alarmclocks []devices.IAlarmClockDevice
-		blinds      []devices.IBlindDevice
-		climates    []devices.IClimateDevice
-		lightings   []devices.ILightingDevice
+		alarmclocks []IAlarmClockDevice
+		blinds      []IBlindDevice
+		climates    []IClimateDevice
+		lightings   []ILightingDevice
 	)
 	db := getConnection()
 	defer db.Close()
