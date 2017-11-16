@@ -5,6 +5,7 @@ import (
 	"log"
 	"os/user"
 
+	testAlarmClock "github.com/joshua22s/Personal-Assistant/TestAlarmClock"
 	_ "github.com/mattn/go-sqlite3"
 )
 
@@ -42,6 +43,10 @@ func getDevices() ([]IAlarmClockDevice, []IBlindDevice, []IClimateDevice, []ILig
 		blinds      []IBlindDevice
 		climates    []IClimateDevice
 		lightings   []ILightingDevice
+		id          int
+		name        string
+		deviceType  int
+		ipaddr      string
 	)
 	db := getConnection()
 	defer db.Close()
@@ -51,8 +56,12 @@ func getDevices() ([]IAlarmClockDevice, []IBlindDevice, []IClimateDevice, []ILig
 	}
 	defer rows.Close()
 	for rows.Next() {
-		//TODO figure out how to read different devices from database
-		err = rows.Scan()
+
+		err = rows.Scan(&id, &name, &deviceType, &ipaddr)
+		switch deviceType {
+		case 1:
+			alarmclocks = append(alarmclocks, testAlarmClock.TestAlarmClock{id, name, ipaddr})
+		}
 	}
 
 	return alarmclocks, blinds, climates, lightings

@@ -3,7 +3,7 @@ package main
 import (
 	"time"
 
-	testAlarmClock "github.com/joshua22s/Personal-Assistant/TestAlarmClock"
+	//	testAlarmClock "github.com/joshua22s/Personal-Assistant/TestAlarmClock"
 )
 
 var (
@@ -14,9 +14,9 @@ var (
 )
 
 func initializeDevices() {
-	device := testAlarmClock.TestAlarmClock{1, "wekker", "http://localhost:8080"}
-	alarmClockDevices = append(alarmClockDevices, device)
-	alarmClockDevices[0].SetTime(time.Now())
+	alarmClockDevices, blindDevices, climateDevices, lightingDevices = getDevices()
+	//alarmClockDevices = append(alarmClockDevices, device)
+	//	alarmClockDevices[0].SetTime(time.Now())
 }
 
 func triggerAlarmClock(id int, timeToSet time.Time) {
