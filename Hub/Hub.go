@@ -13,7 +13,7 @@ func main() {
 	appointments := calendar.GetAppointments(time.Now(), time.Now().Add(time.Hour*24))
 	fmt.Println(appointments)
 	traffic.Start(getMapsKey())
-	timeToGo := traffic.GetTravelTime("Hoogstraat 39, Beringe",
+	traffic.GetTravelTime("Hoogstraat 39, Beringe",
 		appointments[0].Location, "driving",
 		appointments[0].StartTime)
 	//startWebServer()
@@ -24,5 +24,6 @@ func main() {
 	//		fmt.Printf("hub: %v\n", d.GetName())
 	//	}
 	initializeDevices()
-	triggerAlarmClock(1, timeToGo)
+	//	triggerAlarmClock(1, timeToGo)
+	turnOnHueLight("Nachtlamp")
 }

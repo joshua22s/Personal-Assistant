@@ -4,6 +4,7 @@ import (
 	"time"
 
 	//	testAlarmClock "github.com/joshua22s/Personal-Assistant/TestAlarmClock"
+	philipshue "github.com/joshua22s/Personal-Assistant/PhilipsHue"
 )
 
 var (
@@ -15,8 +16,6 @@ var (
 
 func initializeDevices() {
 	alarmClockDevices, blindDevices, climateDevices, lightingDevices = getDevices()
-	//alarmClockDevices = append(alarmClockDevices, device)
-	//	alarmClockDevices[0].SetTime(time.Now())
 }
 
 func triggerAlarmClock(id int, timeToSet time.Time) {
@@ -25,4 +24,11 @@ func triggerAlarmClock(id int, timeToSet time.Time) {
 			alarm.SetTime(timeToSet)
 		}
 	}
+}
+
+func turnOnHueLight(name string) {
+	philipshuecontrol := philipshue.PhilipsHueController{Id: 1, Name: "philipshue"}
+	philipshuecontrol.Setup()
+	philipshuecontrol.ToggleLight(name)
+
 }
