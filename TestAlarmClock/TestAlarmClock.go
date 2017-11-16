@@ -10,8 +10,13 @@ import (
 )
 
 type TestAlarmClock struct {
+	Id        int
 	Name      string
 	IpAddress string
+}
+
+func (this TestAlarmClock) GetId() int {
+	return this.Id
 }
 
 func (this TestAlarmClock) GetName() string {

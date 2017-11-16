@@ -16,6 +16,7 @@ import (
 
 //inherits Device.go, implements IAlarmClockDevice.go
 type TestAlarmClockDevice struct {
+	ID        int
 	Name      string
 	IpAddress string
 }

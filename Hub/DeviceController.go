@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"time"
 
 	testAlarmClock "github.com/joshua22s/Personal-Assistant/TestAlarmClock"
@@ -15,13 +14,15 @@ var (
 )
 
 func initializeDevices() {
-	fmt.Println("device name")
-
-	device := testAlarmClock.TestAlarmClock{"wekker", "http://localhost:8080"}
-	fmt.Println(device.GetName())
+	device := testAlarmClock.TestAlarmClock{1, "wekker", "http://localhost:8080"}
 	alarmClockDevices = append(alarmClockDevices, device)
-	for _, d := range alarmClockDevices {
-		d.SetTime(time.Now().Add(time.Hour * 1))
+	alarmClockDevices[0].SetTime(time.Now())
+}
+
+func triggerAlarmClock(id int, timeToSet time.Time) {
+	for _, alarm := range alarmClockDevices {
+		if alarm.GetId() == id {
+			alarm.SetTime(timeToSet)
+		}
 	}
-	//	alarmClockDevices[0].SetTime(time.Now())
 }

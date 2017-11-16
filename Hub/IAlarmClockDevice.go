@@ -5,6 +5,7 @@ import (
 )
 
 type IAlarmClockDevice interface {
+	GetId() int
 	GetName() string
 	SetTime(time time.Time)
 }

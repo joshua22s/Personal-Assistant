@@ -13,9 +13,9 @@ func main() {
 	appointments := calendar.GetAppointments(time.Now(), time.Now().Add(time.Hour*24))
 	fmt.Println(appointments)
 	traffic.Start(getMapsKey())
-	fmt.Println(traffic.GetTravelTime("Hoogstraat 39, Beringe",
+	timeToGo := traffic.GetTravelTime("Hoogstraat 39, Beringe",
 		appointments[0].Location, "driving",
-		appointments[0].StartTime))
+		appointments[0].StartTime)
 	//startWebServer()
 	//	var alarms []devices.IAlarmClockDevice
 	//	alarms = append(alarms, devices.TestAlarmClockDevice{"test", "172.0.0.1:8080/alarm"})
@@ -24,4 +24,5 @@ func main() {
 	//		fmt.Printf("hub: %v\n", d.GetName())
 	//	}
 	initializeDevices()
+	triggerAlarmClock(1, timeToGo)
 }
