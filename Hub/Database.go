@@ -95,3 +95,27 @@ func getUserMorningTodosForDay(userid int, day time.Weekday) []MorningTodo {
 	}
 	return morningtodos
 }
+
+func getAllUserMorningTodos(userid int) []MorningTodo {
+	var (
+		morningtodos  []MorningTodo
+		id            int
+		name          string
+		dayofweek     time.Weekday
+		durationInSec int
+	)
+	db := getConnection()
+	defer db.Close()
+	rows, err := db.Query("SELECT m.id, m.name, m.duration, d.daynumber FROM morningtodo m JOIN dayofweek d ON m.day = d.id WHERE m.userid = ?", userid)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer rows.Close()
+	for rows.Next() {
+		err = rows.Scan(&id, &name, &durationInSec, &dayofweek)
+		//		var duration time.Duration = time.Duration(rand.Int31n(durationInSec)) * time.Second
+		fmt.Println(durationInSec)
+		morningtodos = append(morningtodos, MorningTodo{id, name, time.Duration(durationInSec * 1000000000), dayofweek})
+	}
+	return morningtodos
+}

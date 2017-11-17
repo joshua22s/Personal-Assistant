@@ -1,8 +1,0 @@
-.row .input-field input:focus {
-    border-bottom: 1px solid #ff7043 !important;
-    box-shadow: 0 1px 0 0 #ff7043 !important;
-}
-
-.input-field input:focus+label {
-    color: #ff7043 !important;
-  }

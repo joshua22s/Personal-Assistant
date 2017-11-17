@@ -9,7 +9,7 @@ import (
 )
 
 func main() {
-	//startWebServer()
+	startWebServer()
 	setupWakeUpTimeCalculator()
 	fmt.Println("Je moet om ", calculateWakeUpTime(time.Now()), " gaan.")
 }
