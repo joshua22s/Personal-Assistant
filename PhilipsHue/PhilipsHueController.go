@@ -34,30 +34,32 @@ func (this PhilipsHueController) Setup() {
 			log.Fatal(err)
 		}
 	}
-	light, err := b.Lights().Get("Nachtlamp")
-	if err != nil {
-		log.Fatal(err)
-	}
-	if err := light.On(); err != nil {
-		log.Fatal(err)
-	}
-	err = light.Set(&hue.State{
-		TransitionTime: 20,
-		Brightness:     255,
-		XY:             &[2]float64{0.438746, 0.501925},
-	})
-	if err != nil {
-		log.Fatal(err)
-	}
-}
-
-func (this PhilipsHueController) ToggleLight(name string) {
-	//	fmt.Println(this.bridge)
-	//	light, err := this.bridge.Lights().Get(name)
+	this.bridge = b
+	//	light, err := b.Lights().Get("Nachtlamp")
 	//	if err != nil {
 	//		log.Fatal(err)
 	//	}
 	//	if err := light.On(); err != nil {
 	//		log.Fatal(err)
 	//	}
+	//	err = light.Set(&hue.State{
+	//		TransitionTime: 20,
+	//		Brightness:     255,
+	//		XY:             &[2]float64{0.438746, 0.501925},
+	//	})
+	//	if err != nil {
+	//		log.Fatal(err)
+	//	}
+}
+
+func (this PhilipsHueController) ToggleLight(name string) {
+	fmt.Println("bridge")
+	fmt.Println(this.bridge.ID)
+	light, err := this.bridge.Lights().Get(name)
+	if err != nil {
+		log.Fatal(err)
+	}
+	if err := light.On(); err != nil {
+		log.Fatal(err)
+	}
 }
