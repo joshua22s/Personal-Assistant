@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Personal Assistant</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+</head>
+
+<body>
+    <nav>
+        <div class="nav-wrapper deep-orange darken-3">
+            <a href="" class="brand-logo center">Personal Assistant</a>
+            <a href="" data-activates="mobile-demo" class="button-collapse">
+                <i class="material-icons">menu</i>
+            </a>
+            <ul class="left hide-on-med-and-down">
+                <li>
+                    <a href="/dashboard">Dashboard</a>
+                </li>
+                <li>
+                    <a href="/alarms">Alarms</a>
+                </li>
+                <li>
+                    <a href="/travels">Travels</a>
+                </li>
+                <li>
+                    <a href="/devices">Devices</a>
+                </li>
+                <li>
+                    <a href="/todos">Morning Todo's</a>
+                </li>
+            </ul>
+            <ul class="right hide-on-med-and-down">
+                <li>
+                    <a href="/settings">Settings</a>
+                </li>
+            </ul>
+            <ul class="side-nav" id="mobile-demo">
+                <li>
+                    <a href="/dashboard">Dashboard</a>
+                </li>
+                <li>
+                    <a href="/alarms">Alarms</a>
+                </li>
+                <li>
+                    <a href="/travels">Travels</a>
+                </li>
+                <li>
+                    <a href="/devices">Devices</a>
+                </li>
+                <li>
+                    <a href="/todos">Morning Todo's</a>
+                </li>
+                <li>
+                    <a href="/settings">Settings</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <div class="container">
+        <div class="row">
+            {{range $Travel := .Travels}}
+            <div class="col s12 m6 l4">
+                <div class="card">
+                    <div class="card-content">
+                        <span class="card-title">{{$Travel.Name}}</span>
+                        <div class="row">
+                            <div class="col s12 m6 l6">
+                                <div class="row">
+                                    <div class="col s4 m6 l6">
+                                        Type:
+                                    </div>
+                                    <div class="col s8 m6 l6">
+                                        <p>{{$Travel.TravelType}}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col s12 m6 l6">
+                                    <div class="col s4 m6 l6">
+                                        <i class="small material-icons">today</i>
+                                    </div>
+                                    <div class="col s8 m6 l6">
+                                        {{range $Day := $Travel.Days}}
+                                        <p>{{$Day}}</p>
+                                        {{end}}
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {{end}}
+        </div>
+    </div>
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $(".button-collapse").sideNav();
+        })
+    </script>
+
+</body>
+
+</html>

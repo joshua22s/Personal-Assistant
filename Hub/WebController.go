@@ -20,7 +20,18 @@ func todoHandler(w http.ResponseWriter, r *http.Request) {
 			fmt.Println(err)
 		}
 		model := MorningTodoModel{getAllUserMorningTodos(1)}
-		fmt.Print(model)
+		t.Execute(w, model)
+	}
+}
+
+func travelHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method == "GET" {
+		t, err := template.ParseFiles("web/travels.html")
+		if err != nil {
+			fmt.Println(err)
+		}
+		model := TravelModel{getAllUserTravels(1)}
+		fmt.Println(model)
 		t.Execute(w, model)
 	}
 }
@@ -28,6 +39,7 @@ func todoHandler(w http.ResponseWriter, r *http.Request) {
 func startWebServer() {
 	http.HandleFunc("/", indexHandler)
 	http.HandleFunc("/todos", todoHandler)
+	http.HandleFunc("/travels", travelHandler)
 	//	http.HandleFunc("/login", loginHandler)
 	fs := http.FileServer(http.Dir("web"))
 	http.Handle("/css/", fs)

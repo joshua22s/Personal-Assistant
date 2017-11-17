@@ -121,13 +121,6 @@ func getAllUserMorningTodos(userid int) []MorningTodo {
 	}
 	for _, m := range morningtodos {
 		finalMorningTodos = append(finalMorningTodos, MorningTodo{Id: id, Name: name, Duration: time.Duration(durationInSec * 1000000000), Days: getDaysForMorningTodo(m.Id)})
-		fmt.Println("m")
-		fmt.Println(m)
-	}
-	fmt.Println("morningtodooos")
-	fmt.Println(morningtodos)
-	for _, d := range finalMorningTodos[0].Days {
-		fmt.Println(d)
 	}
 	return finalMorningTodos
 }
@@ -146,9 +139,55 @@ func getDaysForMorningTodo(morningTodoId int) []time.Weekday {
 	defer rows.Close()
 	for rows.Next() {
 		err = rows.Scan(&dayofweek)
-		fmt.Println(dayofweek)
 		weekDays = append(weekDays, dayofweek)
 	}
-	fmt.Println(weekDays)
 	return weekDays
+}
+
+func getDaysForTravel(travelId int) []time.Weekday {
+	var (
+		weekDays  []time.Weekday
+		dayofweek time.Weekday
+	)
+	db := getConnection()
+	defer db.Close()
+	rows, err := db.Query("SELECT dayNumber FROM dayofweek WHERE dayNumber IN (SELECT dayId FROM Travel_Day WHERE travelid = ?)", travelId)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer rows.Close()
+	for rows.Next() {
+		err = rows.Scan(&dayofweek)
+		weekDays = append(weekDays, dayofweek)
+	}
+	return weekDays
+}
+
+func getAllUserTravels(userid int) []Travel {
+	var (
+		travels      []Travel
+		id           int
+		name         string
+		traveltype   string
+		finalTravels []Travel
+	)
+	db := getConnection()
+	defer db.Close()
+	rows, err := db.Query("SELECT t.id, t.name, tt.name FROM Travel t JOIN traveltype tt ON tt.id = t.type WHERE t.user = ?", userid)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer rows.Close()
+	for rows.Next() {
+		err = rows.Scan(&id, &name, &traveltype)
+		if err != nil {
+			log.Fatal(err)
+		}
+		travels = append(travels, Travel{Id: id, Name: name, TravelType: traveltype})
+	}
+	fmt.Println(travels)
+	for _, t := range travels {
+		finalTravels = append(finalTravels, Travel{Id: t.Id, Name: t.Name, TravelType: t.TravelType, Days: getDaysForTravel(t.Id)})
+	}
+	return finalTravels
 }
