@@ -68,28 +68,27 @@
                         <span class="card-title">{{$Todo.Name}}</span>
                         <div class="row">
                             <div class="col s12 m6 l6">
-                                <table>
-                                    <tr>
-                                        <th>
-                                            <i class="small material-icons">alarm</i>
-                                        </th>
-                                        <td>
-                                            <p>{{$Todo.Duration}}</p>
-                                        </td>
-                                    </tr>
-                                </table>
+                                <div class="row">
+                                    <div class="col s4 m6 l6">
+                                        <i class="small material-icons">alarm</i>
+                                    </div>
+                                    <div class="col s8 m6 l6">
+                                        <p>{{$Todo.Duration}}</p>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="col s12 m6 l6">
-                                <table>
-                                    <tr>
-                                        <th>
-                                            <i class="small material-icons">today</i>
-                                        </th>
-                                        <td>
-                                            <p>{{$Todo.Day}}</p>
-                                        </td>
-                                    </tr>
-                                </table>
+                            <div class="row">
+                                <div class="col s12 m6 l6">
+                                    <div class="col s4 m6 l6">
+                                        <i class="small material-icons">today</i>
+                                    </div>
+                                    <div class="col s8 m6 l6">
+                                        {{range $Day := $Todo.Days}}
+                                        <p>{{$Day}}</p>
+                                        {{end}}
+                                    </div>
+                                </div>
+
                             </div>
                         </div>
                     </div>

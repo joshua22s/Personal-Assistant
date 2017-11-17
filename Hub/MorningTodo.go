@@ -8,5 +8,5 @@ type MorningTodo struct {
 	Id       int
 	Name     string
 	Duration time.Duration
-	Day      time.Weekday
+	Days     []time.Weekday
 }

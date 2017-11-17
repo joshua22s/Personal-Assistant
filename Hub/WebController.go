@@ -20,8 +20,8 @@ func todoHandler(w http.ResponseWriter, r *http.Request) {
 			fmt.Println(err)
 		}
 		model := MorningTodoModel{getAllUserMorningTodos(1)}
+		fmt.Print(model)
 		t.Execute(w, model)
-
 	}
 }
 

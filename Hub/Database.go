@@ -75,7 +75,7 @@ func getUserMorningTodosForDay(userid int, day time.Weekday) []MorningTodo {
 		morningtodos  []MorningTodo
 		id            int
 		name          string
-		dayofweek     time.Weekday
+		dayofweek     []time.Weekday
 		durationInSec int
 	)
 	db := getConnection()
@@ -91,31 +91,64 @@ func getUserMorningTodosForDay(userid int, day time.Weekday) []MorningTodo {
 		err = rows.Scan(&id, &name, &durationInSec, &dayofweek)
 		//		var duration time.Duration = time.Duration(rand.Int31n(durationInSec)) * time.Second
 		fmt.Println(durationInSec)
-		morningtodos = append(morningtodos, MorningTodo{id, name, time.Duration(durationInSec * 1000000000), dayofweek})
+		morningtodos = append(morningtodos, MorningTodo{Id: id, Name: name, Duration: time.Duration(durationInSec * 1000000000)})
+	}
+	for _, m := range morningtodos {
+		m.Days = getDaysForMorningTodo(m.Id)
 	}
 	return morningtodos
 }
 
 func getAllUserMorningTodos(userid int) []MorningTodo {
 	var (
-		morningtodos  []MorningTodo
-		id            int
-		name          string
-		dayofweek     time.Weekday
-		durationInSec int
+		morningtodos      []MorningTodo
+		finalMorningTodos []MorningTodo
+		id                int
+		name              string
+		durationInSec     int
 	)
 	db := getConnection()
 	defer db.Close()
-	rows, err := db.Query("SELECT m.id, m.name, m.duration, d.daynumber FROM morningtodo m JOIN dayofweek d ON m.day = d.id WHERE m.userid = ?", userid)
+	rows, err := db.Query("SELECT id, name, duration FROM morningtodo WHERE userid = ?", userid)
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer rows.Close()
 	for rows.Next() {
-		err = rows.Scan(&id, &name, &durationInSec, &dayofweek)
-		//		var duration time.Duration = time.Duration(rand.Int31n(durationInSec)) * time.Second
+		err = rows.Scan(&id, &name, &durationInSec)
 		fmt.Println(durationInSec)
-		morningtodos = append(morningtodos, MorningTodo{id, name, time.Duration(durationInSec * 1000000000), dayofweek})
+		morningtodos = append(morningtodos, MorningTodo{Id: id, Name: name, Duration: time.Duration(durationInSec * 1000000000)})
 	}
-	return morningtodos
+	for _, m := range morningtodos {
+		finalMorningTodos = append(finalMorningTodos, MorningTodo{Id: id, Name: name, Duration: time.Duration(durationInSec * 1000000000), Days: getDaysForMorningTodo(m.Id)})
+		fmt.Println("m")
+		fmt.Println(m)
+	}
+	fmt.Println("morningtodooos")
+	fmt.Println(morningtodos)
+	for _, d := range finalMorningTodos[0].Days {
+		fmt.Println(d)
+	}
+	return finalMorningTodos
+}
+
+func getDaysForMorningTodo(morningTodoId int) []time.Weekday {
+	var (
+		weekDays  []time.Weekday
+		dayofweek time.Weekday
+	)
+	db := getConnection()
+	defer db.Close()
+	rows, err := db.Query("SELECT dayNumber FROM dayofweek WHERE dayNumber IN (SELECT dayId FROM MorningTodo_Day WHERE morningTodoId = ?)", morningTodoId)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer rows.Close()
+	for rows.Next() {
+		err = rows.Scan(&dayofweek)
+		fmt.Println(dayofweek)
+		weekDays = append(weekDays, dayofweek)
+	}
+	fmt.Println(weekDays)
+	return weekDays
 }
