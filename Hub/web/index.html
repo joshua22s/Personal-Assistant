@@ -59,18 +59,107 @@
             </ul>
         </div>
     </nav>
+    <br>
+    <div class="container">        
+        <div id="loadingbar" class="progress hide deep-orange lighten-4">
+            <div class="indeterminate deep-orange"></div>
+        </div>          
+        <div class="row">
+            <div class="col s12 m6">
+                <div class="card">
+                    <form method="POST" onsubmit="showLoadingBar()">
+                        <div class="card-content">
+                            <span class="card-title">First appointment tomorrow</span>
+                            <h5>{{.AppointmentTomorrow.Title}}</h5>
+                            <p>{{.AppointmentTomorrow.Description}}</p>
+                            <div class="row">
+                                <div class="col s1 m1 l1">
+                                    <i class="material-icons">query_builder</i>
+                                </div>
+                                <div class="col s11 m11 l11">
+                                    From {{.AppointmentTomorrow.StartTime}}
+                                    <br>to {{.AppointmentTomorrow.EndTime}}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col s1 m1 l1">
+                                    <i class="material-icons">location_on</i>
+                                </div>
+                                <div class="col s11 m11 l11">
+                                    {{.AppointmentTomorrow.Location}}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-action">
+                            <input class="btn deep-orange" type="submit" value="calcuate wake up time" href=""></input>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 
 
-
-
-
+    <div id="wakeupModal" class="modal">
+        <div class="modal-content">
+            <h4>Tomorrow wake up at {{.WakeUpTime}}</h4>
+            <div class="row">
+                <div class="col s1 m1 l1">
+                    <i class="material-icons">query_builder</i>
+                </div>
+                <div class="col s11 m11 l11">
+                    From {{.AppointmentTomorrow.StartTime}}
+                    <br>to {{.AppointmentTomorrow.EndTime}}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col s1 m1 l1">
+                    <i class="material-icons">location_on</i>
+                </div>
+                <div class="col s11 m11 l11">
+                    {{.AppointmentTomorrow.Location}}
+                </div>
+            </div>
+            <div class="row">
+                    <div class="col s1 m1 l1">
+                        <i class="material-icons">card_travel</i>
+                    </div>
+                    <div class="col s11 m11 l11">
+                        {{if eq .Travel.Type "driving"}}
+                        Drive away at {{.Travel.DepartureTime}}
+                        {{else if eq .Travel.Type "walking"}}
+                        Walk away at {{.Travel.DepartureTime}}
+                        {{else if eq .Travel.Type "bicycling"}}
+                        Take the bike at {{.Travel.DepartureTime}}
+                        {{else if eq .Travel.Type "transit"}}
+                        Take transit at {{.Travel.DepartureTime}}
+                        {{end}}
+                    </div>
+                </div>
+        </div>
+    </div>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
     <script>
+        function showLoadingBar() {
+            $("#loadingbar").removeClass("hide");
+        }
+
+        function hideLoadingBar() {
+            $("#loadingbar").addClass("hide");
+        }
+
         $(document).ready(function () {
-            $(".button-collapse").sideNav();
-        })
+            hideLoadingBar();
+            $('.modal').modal();
+            $(".button-collapse").sideNav(); 
+            {{if eq .WakeUpTime ""}}
+            {{else}}
+                hideLoadingBar();
+                $('#wakeupModal').modal('open'); 
+            {{end}}
+        });
     </script>
 
 </body>

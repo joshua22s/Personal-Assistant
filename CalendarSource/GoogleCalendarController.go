@@ -139,7 +139,6 @@ func GetAppointments(startTime time.Time, endTime time.Time) []Appointment {
 	if err != nil {
 		log.Fatalf("Unable to retrieve calendar Client %v", err)
 	}
-
 	var appointments []Appointment
 
 	events, err := srv.Events.List("primary").ShowDeleted(false).SingleEvents(true).TimeMin(formatTime(startTime, "normal")).TimeMax(formatTime(endTime, "normal")).Do()

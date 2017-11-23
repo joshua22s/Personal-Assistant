@@ -1,6 +1,7 @@
 package trafficsource
 
 import (
+	"fmt"
 	"log"
 	"time"
 
@@ -36,6 +37,8 @@ func GetTravelTime(origin string, destination string, mode string, arrivalTime t
 	var departureTime time.Time
 	for _, row := range resp.Rows {
 		for _, element := range row.Elements {
+			fmt.Println(element.Duration)
+			fmt.Println(element.Distance)
 			departureTime = arrivalTime.Add(-element.Duration)
 		}
 	}

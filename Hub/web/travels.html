@@ -60,6 +60,7 @@
         </div>
     </nav>
     <div class="container">
+        <br>
         <div class="row">
             {{range $Travel := .Travels}}
             <div class="col s12 m6 l4">
@@ -68,37 +69,32 @@
                         <span class="card-title">{{$Travel.Name}}</span>
                         <div class="row">
                             <div class="col s12 m6 l6">
-                                <div class="row">
-                                    <div class="col s4 m6 l6">
-                                        Type:
-                                    </div>
-                                    <div class="col s8 m6 l6">
-                                        <p>{{$Travel.TravelType}}</p>
-                                    </div>
+                                <div class="col s4 m6 l6">
+                                    Type:
+                                </div>
+                                <div class="col s8 m6 l6">
+                                    <p>{{$Travel.TravelType}}</p>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col s12 m6 l6">
-                                    <div class="col s4 m6 l6">
-                                        <i class="small material-icons">today</i>
-                                    </div>
-                                    <div class="col s8 m6 l6">
-                                        {{range $Day := $Travel.Days}}
-                                        <p>{{$Day}}</p>
-                                        {{end}}
-                                    </div>
+                        </div>
+                        <div class="row">
+                            <div class="col s12 m6 l6">
+                                <div class="col s4 m6 l6">
+                                    <i class="small material-icons">today</i>
                                 </div>
-
+                                <div class="col s8 m6 l6">
+                                    {{range $Day := $Travel.Days}}
+                                    <p>{{$Day}}</p>
+                                    {{end}}
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            {{end}}
         </div>
+        {{end}}
     </div>
-
-
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
     <script>

@@ -72,17 +72,17 @@ func getDevices() ([]IAlarmClockDevice, []IBlindDevice, []IClimateDevice, []ILig
 
 func getUserMorningTodosForDay(userid int, day time.Weekday) []MorningTodo {
 	var (
-		morningtodos  []MorningTodo
-		id            int
-		name          string
-		dayofweek     []time.Weekday
-		durationInSec int
+		morningtodos      []MorningTodo
+		finalMorningTodos []MorningTodo
+		id                int
+		name              string
+		dayofweek         []time.Weekday
+		durationInSec     int
 	)
 	db := getConnection()
 	defer db.Close()
-	fmt.Println("id: ", userid)
-	fmt.Println("day: ", strings.ToLower(day.String()))
-	rows, err := db.Query("SELECT m.id, m.name, m.duration, d.daynumber FROM morningtodo m JOIN dayofweek d ON m.day = d.id WHERE m.userid = ? AND d.name = ?", userid, strings.ToLower(day.String()))
+	fmt.Println("tostring", strings.ToLower(day.String()))
+	rows, err := db.Query("SELECT m.id, m.name, m.duration, d.daynumber FROM morningtodo m JOIN MorningTodo_Day md ON m.id = md.morningTodoId JOIN dayofweek d ON md.dayId = d.daynumber WHERE m.userid = ? AND d.name = ?", userid, strings.ToLower(day.String()))
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -90,13 +90,12 @@ func getUserMorningTodosForDay(userid int, day time.Weekday) []MorningTodo {
 	for rows.Next() {
 		err = rows.Scan(&id, &name, &durationInSec, &dayofweek)
 		//		var duration time.Duration = time.Duration(rand.Int31n(durationInSec)) * time.Second
-		fmt.Println(durationInSec)
 		morningtodos = append(morningtodos, MorningTodo{Id: id, Name: name, Duration: time.Duration(durationInSec * 1000000000)})
 	}
 	for _, m := range morningtodos {
-		m.Days = getDaysForMorningTodo(m.Id)
+		finalMorningTodos = append(finalMorningTodos, MorningTodo{Id: m.Id, Name: m.Name, Duration: m.Duration, Days: getDaysForMorningTodo(m.Id)})
 	}
-	return morningtodos
+	return finalMorningTodos
 }
 
 func getAllUserMorningTodos(userid int) []MorningTodo {
@@ -120,7 +119,12 @@ func getAllUserMorningTodos(userid int) []MorningTodo {
 		morningtodos = append(morningtodos, MorningTodo{Id: id, Name: name, Duration: time.Duration(durationInSec * 1000000000)})
 	}
 	for _, m := range morningtodos {
-		finalMorningTodos = append(finalMorningTodos, MorningTodo{Id: id, Name: name, Duration: time.Duration(durationInSec * 1000000000), Days: getDaysForMorningTodo(m.Id)})
+		fmt.Println(m)
+		finalMorningTodos = append(finalMorningTodos, MorningTodo{Id: m.Id, Name: m.Name, Duration: m.Duration, Days: getDaysForMorningTodo(m.Id)})
+	}
+
+	for _, f := range finalMorningTodos {
+		fmt.Println(f)
 	}
 	return finalMorningTodos
 }
