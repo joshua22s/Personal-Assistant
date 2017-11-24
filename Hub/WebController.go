@@ -64,16 +64,10 @@ func deviceHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	model := DeviceModel{alarmClockDevices, lightingDevices, blindDevices, climateDevices}
 	if r.Method == http.MethodGet {
-		for _, a := range alarmClockDevices {
-			fmt.Println("foud")
-			fmt.Println(a.GetName())
-		}
 		fmt.Println(alarmClockDevices)
 		t.Execute(w, model)
 	} else if r.Method == http.MethodPost {
 		r.ParseForm()
-		fmt.Println("light:")
-		fmt.Println(r.Form["lightID"])
 		turnOnHueLight(r.Form["lightID"][0])
 		t.Execute(w, model)
 	}

@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"time"
 
 	philipshue "github.com/joshua22s/Personal-Assistant/PhilipsHue"
@@ -16,7 +15,6 @@ var (
 
 func initializeDevices() {
 	alarmClockDevices, blindDevices, climateDevices, lightingDevices = getDevices()
-	fmt.Println(alarmClockDevices)
 }
 
 func triggerAlarmClock(id int, timeToSet time.Time) {

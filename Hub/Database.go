@@ -94,7 +94,6 @@ func getUserMorningTodosForDay(userid int, day time.Weekday) []MorningTodo {
 	defer rows.Close()
 	for rows.Next() {
 		err = rows.Scan(&id, &name, &durationInSec, &dayofweek)
-		//		var duration time.Duration = time.Duration(rand.Int31n(durationInSec)) * time.Second
 		morningtodos = append(morningtodos, MorningTodo{Id: id, Name: name, Duration: time.Duration(durationInSec * 1000000000)})
 	}
 	for _, m := range morningtodos {
@@ -124,12 +123,7 @@ func getAllUserMorningTodos(userid int) []MorningTodo {
 		morningtodos = append(morningtodos, MorningTodo{Id: id, Name: name, Duration: time.Duration(durationInSec * 1000000000)})
 	}
 	for _, m := range morningtodos {
-		fmt.Println(m)
 		finalMorningTodos = append(finalMorningTodos, MorningTodo{Id: m.Id, Name: m.Name, Duration: m.Duration, Days: getDaysForMorningTodo(m.Id)})
-	}
-
-	for _, f := range finalMorningTodos {
-		fmt.Println(f)
 	}
 	return finalMorningTodos
 }
