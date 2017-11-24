@@ -15,7 +15,12 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 		TimeToStartTime(time.Now().Add(time.Hour*24)),
 		TimeToEndTime(time.Now().Add(time.Hour*24)))
 	sort.Sort(AppointmentsByDate(appointments))
-	model := HomeModel{AppointmentModel{appointments[0].Title, appointments[0].Description, FormatFullTime(appointments[0].StartTime), FormatFullTime(appointments[0].EndTime), appointments[0].Location}, ""}
+	var model HomeModel
+	if len(appointments) > 0 {
+		model = HomeModel{AppointmentModel{appointments[0].Title, appointments[0].Description, FormatFullTime(appointments[0].StartTime), FormatFullTime(appointments[0].EndTime), appointments[0].Location}, ""}
+	} else {
+		model = HomeModel{AppointmentModel{}, ""}
+	}
 	t, _ := template.ParseFiles("web/index.html")
 	if r.Method == http.MethodGet {
 		t.Execute(w, model)
