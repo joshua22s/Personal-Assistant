@@ -57,10 +57,42 @@ func travelHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func deviceHandler(w http.ResponseWriter, r *http.Request) {
+	t, err := template.ParseFiles("web/devices.html")
+	if err != nil {
+		fmt.Println(err)
+	}
+	model := DeviceModel{alarmClockDevices, lightingDevices, blindDevices, climateDevices}
+	if r.Method == http.MethodGet {
+		for _, a := range alarmClockDevices {
+			fmt.Println("foud")
+			fmt.Println(a.GetName())
+		}
+		fmt.Println(alarmClockDevices)
+		t.Execute(w, model)
+	} else if r.Method == http.MethodPost {
+		r.ParseForm()
+		fmt.Println("light:")
+		fmt.Println(r.Form["lightID"])
+		turnOnHueLight(r.Form["lightID"][0])
+		t.Execute(w, model)
+	}
+}
+
+func alarmHandler(w http.ResponseWriter, r *http.Request) {
+	t, err := template.ParseFiles("web/alarm.html")
+	if err != nil {
+		fmt.Println(err)
+	}
+	t.Execute(w, nil)
+}
+
 func startWebServer() {
 	http.HandleFunc("/", indexHandler)
 	http.HandleFunc("/todos", todoHandler)
 	http.HandleFunc("/travels", travelHandler)
+	http.HandleFunc("/devices", deviceHandler)
+	http.HandleFunc("/alarms", alarmHandler)
 	//	http.HandleFunc("/login", loginHandler)
 	fs := http.FileServer(http.Dir("web"))
 	http.Handle("/css/", fs)

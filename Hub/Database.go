@@ -8,6 +8,7 @@ import (
 	"strings"
 	"time"
 
+	philipshue "github.com/joshua22s/Personal-Assistant/PhilipsHue"
 	testAlarmClock "github.com/joshua22s/Personal-Assistant/TestAlarmClock"
 	_ "github.com/mattn/go-sqlite3"
 )
@@ -63,7 +64,11 @@ func getDevices() ([]IAlarmClockDevice, []IBlindDevice, []IClimateDevice, []ILig
 		err = rows.Scan(&id, &name, &deviceType, &ipaddr)
 		switch deviceType {
 		case 1:
-			alarmclocks = append(alarmclocks, testAlarmClock.TestAlarmClock{id, name, ipaddr})
+			alarmclocks = append(alarmclocks, testAlarmClock.NewTestAlarmClock(id, name, ipaddr))
+			break
+		case 2:
+			lightings = append(lightings, philipshue.NewPhilipsHueController(id, name))
+			break
 		}
 	}
 

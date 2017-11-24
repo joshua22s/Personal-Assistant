@@ -17,7 +17,6 @@ func (a AppointmentsByDate) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
 func (a AppointmentsByDate) Less(i, j int) bool { return a[j].StartTime.After(a[i].StartTime) }
 
 func setupWakeUpTimeCalculator() {
-	calendar.Start()
 	traffic.Start(getMapsKey())
 }
 

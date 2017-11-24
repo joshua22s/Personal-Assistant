@@ -31,3 +31,10 @@ type MorningTodoModel struct {
 type TravelModel struct {
 	Travels []Travel
 }
+
+type DeviceModel struct {
+	AlarmClockDevices []IAlarmClockDevice
+	LightingDevices   []ILightingDevice
+	BlindDevices      []IBlindDevice
+	ClimateDevices    []IClimateDevice
+}

@@ -10,17 +10,21 @@ import (
 )
 
 type TestAlarmClock struct {
-	Id        int
-	Name      string
-	IpAddress string
+	id        int
+	name      string
+	ipAddress string
+}
+
+func NewTestAlarmClock(id int, name string, ipaddress string) *TestAlarmClock {
+	return &TestAlarmClock{id: id, name: name, ipAddress: ipaddress}
 }
 
 func (this TestAlarmClock) GetId() int {
-	return this.Id
+	return this.id
 }
 
 func (this TestAlarmClock) GetName() string {
-	return this.Name
+	return this.name
 }
 
 func (this TestAlarmClock) SetTime(timeToSend time.Time) {
@@ -30,8 +34,8 @@ func (this TestAlarmClock) SetTime(timeToSend time.Time) {
 	if err != nil {
 		log.Fatalf("Unable to parse %v to json\n", jsonData)
 	}
-	_, err = http.Post(this.IpAddress+"/alarm", "application/json", bytes.NewBuffer(jsonValue))
+	_, err = http.Post(this.ipAddress+"/alarm", "application/json", bytes.NewBuffer(jsonValue))
 	if err != nil {
-		log.Fatalf("Http post request to %s failed with error %v", this.IpAddress, err)
+		log.Fatalf("Http post request to %s failed with error %v", this.ipAddress, err)
 	}
 }

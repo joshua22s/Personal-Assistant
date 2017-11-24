@@ -23,7 +23,7 @@ var (
 	client *http.Client
 )
 
-func Start() {
+func init() {
 	usr, err := user.Current()
 	if err != nil {
 		log.Fatalf("Unable to get current user: %v", err)
