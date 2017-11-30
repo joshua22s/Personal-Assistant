@@ -20,7 +20,7 @@ func SetupWakeUpTimeCalculator() {
 	traffic.Start(getMapsKey())
 }
 
-func CalculateWakeUpTime(day time.Time) (time.Time, time.Time, string) {
+func CalculateWakeUpTime(day time.Time) models.Alarm {
 	appointments := calendar.GetAppointments(TimeToStartTime(day), TimeToEndTime(day))
 	sort.Sort(AppointmentsByDate(appointments))
 	travels := GetAllUserTravels(1)
@@ -44,5 +44,6 @@ func CalculateWakeUpTime(day time.Time) (time.Time, time.Time, string) {
 	for _, t := range todos {
 		wakeupTime = wakeupTime.Add(-t.Duration)
 	}
-	return wakeupTime, departureTime, travelToUse.TravelType
+	alarm := models.Alarm{WakeUpTime: wakeupTime, DepartureTime: departureTime, Travel: travelToUse, MorningTodos: todos}
+	return alarm
 }

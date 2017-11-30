@@ -28,8 +28,8 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 		t.Execute(w, model)
 	} else if r.Method == http.MethodPost {
 		r.ParseForm()
-		wakeUp, travelTime, travelType := hub.CalculateWakeUpTime(time.Now().Add(time.Hour * 24))
-		model := HomePostModel{model.AppointmentTomorrow, hub.FormatTimeHourMinute(wakeUp), TravelHomeModel{travelType, hub.FormatTimeHourMinute(travelTime)}}
+		alarmToUse := hub.CalculateWakeUpTime(time.Now().Add(time.Hour * 24))
+		model := HomePostModel{model.AppointmentTomorrow, hub.FormatTimeHourMinute(alarmToUse.WakeUpTime), TravelHomeModel{alarmToUse.Travel.TravelType, hub.FormatTimeHourMinute(alarmToUse.DepartureTime)}}
 		t.Execute(w, model)
 	}
 }

@@ -8,5 +8,6 @@ import (
 func main() {
 	hub.SetupWakeUpTimeCalculator()
 	hub.InitializeDevices()
+	hub.StartAlarmTimer()
 	web.StartWebServer()
 }
