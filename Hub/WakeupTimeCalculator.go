@@ -1,7 +1,7 @@
 package main
 
 import (
-	"fmt"
+	_ "fmt"
 	"sort"
 	"strconv"
 	"time"
@@ -41,12 +41,9 @@ func calculateWakeUpTime(day time.Time) (time.Time, time.Time, string) {
 	departureTime := traffic.GetTravelTime("Hoogstraat 39 Beringe", appointments[0].Location, travelToUse.TravelType, appointments[0].StartTime)
 	todos := getUserMorningTodosForDay(1, day.Weekday())
 	wakeupTime := departureTime
-	fmt.Println("todos")
 	for _, t := range todos {
-		fmt.Println(t)
 		wakeupTime = wakeupTime.Add(-t.Duration)
 	}
-	fmt.Println("end todos")
 	return wakeupTime, departureTime, travelToUse.TravelType
 }
 
