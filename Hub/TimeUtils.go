@@ -16,7 +16,7 @@ func TimeToEndTime(toConvert time.Time) time.Time {
 }
 
 func FormatTimeHourMinute(toFormat time.Time) string {
-	//	toFormat = RoundTime(toFormat)
+	toFormat = RoundTime(toFormat)
 	formatted := ""
 	if toFormat.Hour() < 10 {
 		formatted += "0" + strconv.Itoa(toFormat.Hour())
@@ -33,7 +33,7 @@ func FormatTimeHourMinute(toFormat time.Time) string {
 }
 
 func FormatFullTime(toFormat time.Time) string {
-	//	toFormat = RoundTime(toFormat)
+	toFormat = RoundTime(toFormat)
 	formatted := ""
 	if toFormat.Hour() < 10 {
 		formatted += "0" + strconv.Itoa(toFormat.Hour())
