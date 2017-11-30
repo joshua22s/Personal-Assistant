@@ -1,5 +1,0 @@
-package calendarsource
-
-func unused() {
-
-}

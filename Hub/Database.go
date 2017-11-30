@@ -2,7 +2,7 @@ package hub
 
 import (
 	"database/sql"
-	"fmt"
+	_ "fmt"
 	"log"
 	"os/user"
 	"strings"
@@ -119,7 +119,6 @@ func GetAllUserMorningTodos(userid int) []models.MorningTodo {
 	defer rows.Close()
 	for rows.Next() {
 		err = rows.Scan(&id, &name, &durationInSec)
-		fmt.Println(durationInSec)
 		morningtodos = append(morningtodos, models.MorningTodo{Id: id, Name: name, Duration: time.Duration(durationInSec * 1000000000)})
 	}
 	for _, m := range morningtodos {

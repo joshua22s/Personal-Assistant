@@ -1,7 +1,7 @@
 package philipshue
 
 import (
-	"fmt"
+	_ "fmt"
 	"log"
 
 	"gbbr.io/hue"
@@ -40,8 +40,6 @@ func (this *PhilipsHueController) Setup() {
 }
 
 func (this *PhilipsHueController) ToggleLight(name string) {
-	fmt.Println("bridge")
-	fmt.Println(this.bridge.ID)
 	light, err := this.bridge.Lights().Get(name)
 	if err != nil {
 		log.Fatal(err)
