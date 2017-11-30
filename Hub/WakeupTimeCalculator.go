@@ -3,7 +3,6 @@ package hub
 import (
 	_ "fmt"
 	"sort"
-	"strconv"
 	"time"
 
 	models "github.com/joshua22s/Personal-Assistant/Models"
@@ -46,51 +45,4 @@ func CalculateWakeUpTime(day time.Time) (time.Time, time.Time, string) {
 		wakeupTime = wakeupTime.Add(-t.Duration)
 	}
 	return wakeupTime, departureTime, travelToUse.TravelType
-}
-
-func TimeToStartTime(toConvert time.Time) time.Time {
-	return time.Date(toConvert.Year(), toConvert.Month(), toConvert.Day(), 0, 0, 1, 0, toConvert.Location())
-}
-
-func TimeToEndTime(toConvert time.Time) time.Time {
-	return time.Date(toConvert.Year(), toConvert.Month(), toConvert.Day(), 23, 59, 59, 0, toConvert.Location())
-}
-
-func FormatTimeHourMinute(toFormat time.Time) string {
-	formatted := ""
-	if toFormat.Hour() < 10 {
-		formatted += "0" + strconv.Itoa(toFormat.Hour())
-	} else {
-		formatted += strconv.Itoa(toFormat.Hour()) + ""
-	}
-	formatted += ":"
-	if toFormat.Minute() < 10 {
-		formatted += "0" + strconv.Itoa(toFormat.Minute())
-	} else {
-		formatted += strconv.Itoa(toFormat.Minute())
-	}
-	return formatted
-}
-
-func FormatFullTime(toFormat time.Time) string {
-	formatted := ""
-	if toFormat.Hour() < 10 {
-		formatted += "0" + strconv.Itoa(toFormat.Hour())
-	} else {
-		formatted += strconv.Itoa(toFormat.Hour()) + ""
-	}
-	formatted += ":"
-	if toFormat.Minute() < 10 {
-		formatted += "0" + strconv.Itoa(toFormat.Minute())
-	} else {
-		formatted += strconv.Itoa(toFormat.Minute())
-	}
-	formatted += "-"
-	if toFormat.Day() < 10 {
-		formatted += "0" + strconv.Itoa(toFormat.Day())
-	} else {
-		formatted += strconv.Itoa(toFormat.Day())
-	}
-	formatted += "-" + toFormat.Month().String() + "-" + strconv.Itoa(toFormat.Year())
-	return formatted
 }
