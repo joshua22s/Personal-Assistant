@@ -1,4 +1,4 @@
-package main
+package hub
 
 import (
 	_ "fmt"
@@ -6,6 +6,7 @@ import (
 	"strconv"
 	"time"
 
+	models "github.com/joshua22s/Personal-Assistant/Models"
 	calendar "github.com/joshua22s/Personal-Assistant/calendarsource"
 	traffic "github.com/joshua22s/Personal-Assistant/trafficsource"
 )
@@ -16,16 +17,16 @@ func (a AppointmentsByDate) Len() int           { return len(a) }
 func (a AppointmentsByDate) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
 func (a AppointmentsByDate) Less(i, j int) bool { return a[j].StartTime.After(a[i].StartTime) }
 
-func setupWakeUpTimeCalculator() {
+func SetupWakeUpTimeCalculator() {
 	traffic.Start(getMapsKey())
 }
 
-func calculateWakeUpTime(day time.Time) (time.Time, time.Time, string) {
+func CalculateWakeUpTime(day time.Time) (time.Time, time.Time, string) {
 	appointments := calendar.GetAppointments(TimeToStartTime(day), TimeToEndTime(day))
 	sort.Sort(AppointmentsByDate(appointments))
-	travels := getAllUserTravels(1)
+	travels := GetAllUserTravels(1)
 	contains := false
-	var travelToUse Travel
+	var travelToUse models.Travel
 	for _, travel := range travels {
 		for _, d := range travel.Days {
 			if d == day.Weekday() {
@@ -39,7 +40,7 @@ func calculateWakeUpTime(day time.Time) (time.Time, time.Time, string) {
 		}
 	}
 	departureTime := traffic.GetTravelTime("Hoogstraat 39 Beringe", appointments[0].Location, travelToUse.TravelType, appointments[0].StartTime)
-	todos := getUserMorningTodosForDay(1, day.Weekday())
+	todos := GetUserMorningTodosForDay(1, day.Weekday())
 	wakeupTime := departureTime
 	for _, t := range todos {
 		wakeupTime = wakeupTime.Add(-t.Duration)

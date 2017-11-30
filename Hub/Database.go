@@ -1,4 +1,4 @@
-package main
+package hub
 
 import (
 	"database/sql"
@@ -8,6 +8,7 @@ import (
 	"strings"
 	"time"
 
+	models "github.com/joshua22s/Personal-Assistant/Models"
 	philipshue "github.com/joshua22s/Personal-Assistant/PhilipsHue"
 	testAlarmClock "github.com/joshua22s/Personal-Assistant/TestAlarmClock"
 	_ "github.com/mattn/go-sqlite3"
@@ -41,12 +42,12 @@ func getMapsKey() string {
 	return value
 }
 
-func getDevices() ([]IAlarmClockDevice, []IBlindDevice, []IClimateDevice, []ILightingDevice) {
+func GetDevices() ([]models.IAlarmClockDevice, []models.IBlindDevice, []models.IClimateDevice, []models.ILightingDevice) {
 	var (
-		alarmclocks []IAlarmClockDevice
-		blinds      []IBlindDevice
-		climates    []IClimateDevice
-		lightings   []ILightingDevice
+		alarmclocks []models.IAlarmClockDevice
+		blinds      []models.IBlindDevice
+		climates    []models.IClimateDevice
+		lightings   []models.ILightingDevice
 		id          int
 		name        string
 		deviceType  int
@@ -75,10 +76,10 @@ func getDevices() ([]IAlarmClockDevice, []IBlindDevice, []IClimateDevice, []ILig
 	return alarmclocks, blinds, climates, lightings
 }
 
-func getUserMorningTodosForDay(userid int, day time.Weekday) []MorningTodo {
+func GetUserMorningTodosForDay(userid int, day time.Weekday) []models.MorningTodo {
 	var (
-		morningtodos      []MorningTodo
-		finalMorningTodos []MorningTodo
+		morningtodos      []models.MorningTodo
+		finalMorningTodos []models.MorningTodo
 		id                int
 		name              string
 		dayofweek         []time.Weekday
@@ -86,7 +87,6 @@ func getUserMorningTodosForDay(userid int, day time.Weekday) []MorningTodo {
 	)
 	db := getConnection()
 	defer db.Close()
-	fmt.Println("tostring", strings.ToLower(day.String()))
 	rows, err := db.Query("SELECT m.id, m.name, m.duration, d.daynumber FROM morningtodo m JOIN MorningTodo_Day md ON m.id = md.morningTodoId JOIN dayofweek d ON md.dayId = d.daynumber WHERE m.userid = ? AND d.name = ?", userid, strings.ToLower(day.String()))
 	if err != nil {
 		log.Fatal(err)
@@ -94,18 +94,18 @@ func getUserMorningTodosForDay(userid int, day time.Weekday) []MorningTodo {
 	defer rows.Close()
 	for rows.Next() {
 		err = rows.Scan(&id, &name, &durationInSec, &dayofweek)
-		morningtodos = append(morningtodos, MorningTodo{Id: id, Name: name, Duration: time.Duration(durationInSec * 1000000000)})
+		morningtodos = append(morningtodos, models.MorningTodo{Id: id, Name: name, Duration: time.Duration(durationInSec * 1000000000)})
 	}
 	for _, m := range morningtodos {
-		finalMorningTodos = append(finalMorningTodos, MorningTodo{Id: m.Id, Name: m.Name, Duration: m.Duration, Days: getDaysForMorningTodo(m.Id)})
+		finalMorningTodos = append(finalMorningTodos, models.MorningTodo{Id: m.Id, Name: m.Name, Duration: m.Duration, Days: GetDaysForMorningTodo(m.Id)})
 	}
 	return finalMorningTodos
 }
 
-func getAllUserMorningTodos(userid int) []MorningTodo {
+func GetAllUserMorningTodos(userid int) []models.MorningTodo {
 	var (
-		morningtodos      []MorningTodo
-		finalMorningTodos []MorningTodo
+		morningtodos      []models.MorningTodo
+		finalMorningTodos []models.MorningTodo
 		id                int
 		name              string
 		durationInSec     int
@@ -120,15 +120,15 @@ func getAllUserMorningTodos(userid int) []MorningTodo {
 	for rows.Next() {
 		err = rows.Scan(&id, &name, &durationInSec)
 		fmt.Println(durationInSec)
-		morningtodos = append(morningtodos, MorningTodo{Id: id, Name: name, Duration: time.Duration(durationInSec * 1000000000)})
+		morningtodos = append(morningtodos, models.MorningTodo{Id: id, Name: name, Duration: time.Duration(durationInSec * 1000000000)})
 	}
 	for _, m := range morningtodos {
-		finalMorningTodos = append(finalMorningTodos, MorningTodo{Id: m.Id, Name: m.Name, Duration: m.Duration, Days: getDaysForMorningTodo(m.Id)})
+		finalMorningTodos = append(finalMorningTodos, models.MorningTodo{Id: m.Id, Name: m.Name, Duration: m.Duration, Days: GetDaysForMorningTodo(m.Id)})
 	}
 	return finalMorningTodos
 }
 
-func getDaysForMorningTodo(morningTodoId int) []time.Weekday {
+func GetDaysForMorningTodo(morningTodoId int) []time.Weekday {
 	var (
 		weekDays  []time.Weekday
 		dayofweek time.Weekday
@@ -147,7 +147,7 @@ func getDaysForMorningTodo(morningTodoId int) []time.Weekday {
 	return weekDays
 }
 
-func getDaysForTravel(travelId int) []time.Weekday {
+func GetDaysForTravel(travelId int) []time.Weekday {
 	var (
 		weekDays  []time.Weekday
 		dayofweek time.Weekday
@@ -166,13 +166,13 @@ func getDaysForTravel(travelId int) []time.Weekday {
 	return weekDays
 }
 
-func getAllUserTravels(userid int) []Travel {
+func GetAllUserTravels(userid int) []models.Travel {
 	var (
-		travels      []Travel
+		travels      []models.Travel
 		id           int
 		name         string
 		traveltype   string
-		finalTravels []Travel
+		finalTravels []models.Travel
 	)
 	db := getConnection()
 	defer db.Close()
@@ -186,11 +186,10 @@ func getAllUserTravels(userid int) []Travel {
 		if err != nil {
 			log.Fatal(err)
 		}
-		travels = append(travels, Travel{Id: id, Name: name, TravelType: traveltype})
+		travels = append(travels, models.Travel{Id: id, Name: name, TravelType: traveltype})
 	}
-	fmt.Println(travels)
 	for _, t := range travels {
-		finalTravels = append(finalTravels, Travel{Id: t.Id, Name: t.Name, TravelType: t.TravelType, Days: getDaysForTravel(t.Id)})
+		finalTravels = append(finalTravels, models.Travel{Id: t.Id, Name: t.Name, TravelType: t.TravelType, Days: GetDaysForTravel(t.Id)})
 	}
 	return finalTravels
 }

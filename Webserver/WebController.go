@@ -1,4 +1,4 @@
-package main
+package webserver
 
 import (
 	"fmt"
@@ -7,17 +7,19 @@ import (
 	"sort"
 	"time"
 
+	hub "github.com/joshua22s/Personal-Assistant/Hub"
+	//	models "github.com/joshua22s/Personal-Assistant/Models"
 	calendar "github.com/joshua22s/Personal-Assistant/calendarsource"
 )
 
 func indexHandler(w http.ResponseWriter, r *http.Request) {
 	appointments := calendar.GetAppointments(
-		TimeToStartTime(time.Now().Add(time.Hour*24)),
-		TimeToEndTime(time.Now().Add(time.Hour*24)))
-	sort.Sort(AppointmentsByDate(appointments))
+		hub.TimeToStartTime(time.Now().Add(time.Hour*24)),
+		hub.TimeToEndTime(time.Now().Add(time.Hour*24)))
+	sort.Sort(hub.AppointmentsByDate(appointments))
 	var model HomeModel
 	if len(appointments) > 0 {
-		model = HomeModel{AppointmentModel{appointments[0].Title, appointments[0].Description, FormatFullTime(appointments[0].StartTime), FormatFullTime(appointments[0].EndTime), appointments[0].Location}, ""}
+		model = HomeModel{AppointmentModel{appointments[0].Title, appointments[0].Description, hub.FormatFullTime(appointments[0].StartTime), hub.FormatFullTime(appointments[0].EndTime), appointments[0].Location}, ""}
 	} else {
 		model = HomeModel{AppointmentModel{}, ""}
 	}
@@ -26,9 +28,8 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 		t.Execute(w, model)
 	} else if r.Method == http.MethodPost {
 		r.ParseForm()
-		wakeUp, travelTime, travelType := calculateWakeUpTime(time.Now().Add(time.Hour * 24))
-		model := HomePostModel{model.AppointmentTomorrow, FormatTimeHourMinute(wakeUp), TravelHomeModel{travelType, FormatTimeHourMinute(travelTime)}}
-		fmt.Println(model)
+		wakeUp, travelTime, travelType := hub.CalculateWakeUpTime(time.Now().Add(time.Hour * 24))
+		model := HomePostModel{model.AppointmentTomorrow, hub.FormatTimeHourMinute(wakeUp), TravelHomeModel{travelType, hub.FormatTimeHourMinute(travelTime)}}
 		t.Execute(w, model)
 	}
 }
@@ -39,7 +40,7 @@ func todoHandler(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			fmt.Println(err)
 		}
-		model := MorningTodoModel{getAllUserMorningTodos(1)}
+		model := MorningTodoModel{hub.GetAllUserMorningTodos(1)}
 		t.Execute(w, model)
 	} else if r.Method == http.MethodPost {
 
@@ -52,7 +53,7 @@ func travelHandler(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			fmt.Println(err)
 		}
-		model := TravelModel{getAllUserTravels(1)}
+		model := TravelModel{hub.GetAllUserTravels(1)}
 		t.Execute(w, model)
 	}
 }
@@ -62,13 +63,12 @@ func deviceHandler(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		fmt.Println(err)
 	}
-	model := DeviceModel{alarmClockDevices, lightingDevices, blindDevices, climateDevices}
+	model := DeviceModel{hub.GetAlarmClockDevices(), hub.GetLightingDevies(), hub.GetBlindDevices(), hub.GetClimateDevices()}
 	if r.Method == http.MethodGet {
-		fmt.Println(alarmClockDevices)
 		t.Execute(w, model)
 	} else if r.Method == http.MethodPost {
 		r.ParseForm()
-		turnOnHueLight(r.Form["lightID"][0])
+		hub.TurnOnHueLight(r.Form["lightID"][0])
 		t.Execute(w, model)
 	}
 }
@@ -81,7 +81,7 @@ func alarmHandler(w http.ResponseWriter, r *http.Request) {
 	t.Execute(w, nil)
 }
 
-func startWebServer() {
+func StartWebServer() {
 	http.HandleFunc("/", indexHandler)
 	http.HandleFunc("/todos", todoHandler)
 	http.HandleFunc("/travels", travelHandler)

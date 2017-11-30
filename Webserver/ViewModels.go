@@ -1,4 +1,8 @@
-package main
+package webserver
+
+import (
+	models "github.com/joshua22s/Personal-Assistant/Models"
+)
 
 type HomeModel struct {
 	AppointmentTomorrow AppointmentModel
@@ -25,16 +29,16 @@ type AppointmentModel struct {
 }
 
 type MorningTodoModel struct {
-	Todos []MorningTodo
+	Todos []models.MorningTodo
 }
 
 type TravelModel struct {
-	Travels []Travel
+	Travels []models.Travel
 }
 
 type DeviceModel struct {
-	AlarmClockDevices []IAlarmClockDevice
-	LightingDevices   []ILightingDevice
-	BlindDevices      []IBlindDevice
-	ClimateDevices    []IClimateDevice
+	AlarmClockDevices []models.IAlarmClockDevice
+	LightingDevices   []models.ILightingDevice
+	BlindDevices      []models.IBlindDevice
+	ClimateDevices    []models.IClimateDevice
 }
