@@ -44,6 +44,15 @@ func CalculateWakeUpTime(day time.Time) models.Alarm {
 	for _, t := range todos {
 		wakeupTime = wakeupTime.Add(-t.Duration)
 	}
-	alarm := models.Alarm{WakeUpTime: wakeupTime, DepartureTime: departureTime, Travel: travelToUse, MorningTodos: todos}
+	alarmClockDevices, blindDevices, climateDevices, lightingDevices := GetDevicesForDay(day.Weekday())
+	alarm := models.Alarm{
+		WakeUpTime:        wakeupTime,
+		DepartureTime:     departureTime,
+		Travel:            travelToUse,
+		MorningTodos:      todos,
+		AlarmClockDevices: alarmClockDevices,
+		BlindDevices:      blindDevices,
+		ClimateDevices:    climateDevices,
+		LightingDevices:   lightingDevices}
 	return alarm
 }

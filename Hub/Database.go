@@ -2,6 +2,7 @@ package hub
 
 import (
 	"database/sql"
+	"fmt"
 	_ "fmt"
 	"log"
 	"os/user"
@@ -73,6 +74,42 @@ func GetDevices() ([]models.IAlarmClockDevice, []models.IBlindDevice, []models.I
 		}
 	}
 
+	return alarmclocks, blinds, climates, lightings
+}
+
+func GetDevicesForDay(day time.Weekday) ([]models.IAlarmClockDevice, []models.IBlindDevice, []models.IClimateDevice, []models.ILightingDevice) {
+	var (
+		alarmclocks []models.IAlarmClockDevice
+		blinds      []models.IBlindDevice
+		climates    []models.IClimateDevice
+		lightings   []models.ILightingDevice
+		id          int
+		name        string
+		deviceType  int
+		ipaddr      string
+	)
+	db := getConnection()
+	defer db.Close()
+	rows, err := db.Query("SELECT d.* FROM device d JOIN Device_Day dd ON d.id = dd.deviceId JOIN dayofweek da ON dd.dayId = da.id WHERE da.daynumber = ?", day)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer rows.Close()
+	for rows.Next() {
+
+		err = rows.Scan(&id, &name, &deviceType, &ipaddr)
+		switch deviceType {
+		case 1:
+			alarmclocks = append(alarmclocks, testAlarmClock.NewTestAlarmClock(id, name, ipaddr))
+			break
+		case 2:
+			lightings = append(lightings, philipshue.NewPhilipsHueController(id, name))
+			break
+		}
+	}
+	for _, l := range lightings {
+		fmt.Println(l.GetName())
+	}
 	return alarmclocks, blinds, climates, lightings
 }
 

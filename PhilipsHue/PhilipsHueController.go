@@ -39,8 +39,8 @@ func (this *PhilipsHueController) Setup() {
 	this.bridge = bridge
 }
 
-func (this *PhilipsHueController) ToggleLight(name string) {
-	light, err := this.bridge.Lights().Get(name)
+func (this *PhilipsHueController) TurnOn() {
+	light, err := this.bridge.Lights().Get(this.name)
 	if err != nil {
 		log.Fatal(err)
 	}

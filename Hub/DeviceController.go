@@ -43,7 +43,7 @@ func GetClimateDevices() []models.IClimateDevice {
 }
 
 func TurnOnHueLight(name string) {
-	philipshuecontrol := philipshue.NewPhilipsHueController(1, "philipshue")
+	philipshuecontrol := philipshue.NewPhilipsHueController(1, "Nachtlamp")
 	philipshuecontrol.Setup()
-	philipshuecontrol.ToggleLight(name)
+	philipshuecontrol.TurnOn()
 }
