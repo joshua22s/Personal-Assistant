@@ -1,8 +1,9 @@
 package alarmclock
 
 import (
-	"errors"
+	//	"errors"
 
+	//	"github.com/joshua22s/calendarsource"
 	"github.com/joshua22s/observer"
 )
 
@@ -17,8 +18,11 @@ func NewAlarmClock(settings string) *AlarmClock {
 }
 
 func (this *AlarmClock) Activate() error {
-	//refresh alarm timer
-	return errors.New("Unable to refresh timer")
+	//	appointments := calendarsource.GetAppointments(time.Time{}, time.Time{}.Add(time.Hour*24))
+	//departureTime := trafficsource.GetTravelTime("Hoogstraat 39 Beringe", "Eindhoven", "driving", time.Now())
+	//fmt.Println(departureTime)
+
+	return nil
 }
 
 func (this *AlarmClock) alarm() {
