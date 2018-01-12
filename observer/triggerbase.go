@@ -6,7 +6,7 @@ import (
 
 type TriggerBase struct {
 	listeners []Listener
-	id        uuid.UUID
+	Id        uuid.UUID
 }
 
 func (this *TriggerBase) AddListener(listener Listener) {
@@ -17,7 +17,7 @@ func (this *TriggerBase) AddListener(listener Listener) {
 }
 
 func (this *TriggerBase) GetId() uuid.UUID {
-	return this.id
+	return this.Id
 }
 
 func (this *TriggerBase) AnnounceAll() {
