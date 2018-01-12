@@ -1,7 +1,6 @@
 package midnighttimer
 
 import (
-	//	"fmt"
 	"time"
 
 	"github.com/joshua22s/observer"
