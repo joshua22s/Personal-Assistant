@@ -1,6 +1,8 @@
 package personalassistant
 
 import (
+	"fmt"
+
 	"github.com/joshua22s/observer"
 	"github.com/satori/go.uuid"
 )
@@ -64,7 +66,10 @@ func (this *Event) checkDone() {
 		}
 	}
 	for _, action := range this.actions {
-		action.Activate()
+		err := action.Activate()
+		if err != nil {
+			fmt.Println(err)
+		}
 	}
 	for trigger, _ := range this.triggers {
 		this.triggers[trigger] = false

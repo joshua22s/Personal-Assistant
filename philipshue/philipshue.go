@@ -41,7 +41,6 @@ func (this *PhilipsHue) setup() {
 }
 
 func (this *PhilipsHue) Activate() error {
-	fmt.Println(this.settings.Lights)
 	for _, l := range this.settings.Lights {
 		light, err := this.bridge.Lights().Get(l)
 		if err != nil {
@@ -52,14 +51,14 @@ func (this *PhilipsHue) Activate() error {
 			log.Fatal(err)
 			return err
 		}
-		fmt.Println("Turn", light.Name, "on")
+		fmt.Println("Turned", light.Name, "on")
 	}
 	return nil
 }
 
 func (this *PhilipsHue) readSettings(settingsPath string) Settings {
 	settings := Settings{}
-	raw, err := ioutil.ReadFile("settings/philipshue.json")
+	raw, err := ioutil.ReadFile(settingsPath)
 	if err != nil {
 		fmt.Println(err.Error())
 	}
