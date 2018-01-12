@@ -1,8 +1,6 @@
 package personalassistant
 
 import (
-	"fmt"
-
 	"github.com/joshua22s/observer"
 	"github.com/satori/go.uuid"
 )
@@ -50,13 +48,10 @@ func (this *Event) AddTrigger(trigger observer.Trigger) {
 }
 
 func (this *Event) Announce(announcer observer.Trigger) {
-	fmt.Println(len(this.triggers))
 	for trigger, _ := range this.triggers {
-		//		fmt.Println(reflect.TypeOf(announcer))
-		//		fmt.Println(reflect.TypeOf(observer.TriggerBase(trigger)))
 		if trigger.GetId() == announcer.GetId() {
-			fmt.Println("announce")
 			this.triggers[trigger] = true
+			this.checkDone()
 			return
 		}
 	}
@@ -68,12 +63,9 @@ func (this *Event) checkDone() {
 			return
 		}
 	}
-	fmt.Println("actions")
-	fmt.Println(this.actions)
 	for _, action := range this.actions {
 		action.Activate()
 	}
-
 	for trigger, _ := range this.triggers {
 		this.triggers[trigger] = false
 	}

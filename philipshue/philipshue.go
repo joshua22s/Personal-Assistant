@@ -1,20 +1,27 @@
 package philipshue
 
 import (
+	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"log"
 
 	"gbbr.io/hue"
 )
 
 type PhilipsHue struct {
-	settings string
+	settings Settings
 	bridge   *hue.Bridge
+}
+
+type Settings struct {
+	Lights []string `json:"lights"`
 }
 
 func NewPhilipsHue(settings string) *PhilipsHue {
 	p := PhilipsHue{}
-	p.settings = settings
+	p.settings = p.readSettings(settings)
+
 	p.setup()
 	return &p
 }
@@ -34,20 +41,32 @@ func (this *PhilipsHue) setup() {
 }
 
 func (this *PhilipsHue) Activate() error {
-	light, err := this.bridge.Lights().Get("Nachtlamp")
-	if err != nil {
-		log.Fatal(err)
-		return err
+	fmt.Println(this.settings.Lights)
+	for _, l := range this.settings.Lights {
+		light, err := this.bridge.Lights().Get(l)
+		if err != nil {
+			log.Fatal(err)
+			return err
+		}
+		if err := light.On(); err != nil {
+			log.Fatal(err)
+			return err
+		}
+		fmt.Println("Turn", light.Name, "on")
 	}
-	if err := light.On(); err != nil {
-		log.Fatal(err)
-		return err
-	}
-	fmt.Println("TURN LIGHTS ON")
-
 	return nil
-	//	if false {
-	//		return errors.New("Unable to turn on lights")
-	//	}
-	//	return nil
+}
+
+func (this *PhilipsHue) readSettings(settingsPath string) Settings {
+	settings := Settings{}
+	raw, err := ioutil.ReadFile("settings/philipshue.json")
+	if err != nil {
+		fmt.Println(err.Error())
+	}
+
+	err = json.Unmarshal(raw, &settings)
+	if err != nil {
+		fmt.Println(err.Error())
+	}
+	return settings
 }

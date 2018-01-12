@@ -2,7 +2,8 @@ package personalassistant
 
 import (
 	"github.com/joshua22s/alarmclock"
-	//	"github.com/joshua22s/testalarmclock"
+	"github.com/joshua22s/philipshue"
+	"github.com/joshua22s/testalarmclock"
 	"github.com/joshua22s/timer"
 )
 
@@ -16,11 +17,10 @@ func Start() {
 	e.AddAction(alarmclock.NewAlarmClock("settings"))
 	//	e := NewEvent("test")
 	e.AddTrigger(timer.NewTimer("", e.GenerateId()))
-	//	e.AddAction(testalarmclock.NewTestAlarmClock())
+	e.AddAction(testalarmclock.NewTestAlarmClock())
+	e.AddAction(philipshue.NewPhilipsHue(""))
 	events = append(events, *e)
 	for true {
-		for _, e := range events {
-			e.checkDone()
-		}
+
 	}
 }
