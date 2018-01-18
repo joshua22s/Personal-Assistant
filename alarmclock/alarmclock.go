@@ -80,7 +80,7 @@ func (this *AlarmClock) getTodoTime(userid int, alarmTime time.Time) time.Durati
 	JOIN dayofweek d ON md.dayId = d.id 
 	WHERE m.userid = ? 
 	AND d.daynumber = ?`, userid, int(alarmTime.Weekday()))
-	fmt.Println(int(alarmTime.Weekday()))
+
 	if err != nil {
 		log.Fatal(err)
 	}

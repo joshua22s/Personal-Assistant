@@ -50,6 +50,7 @@ func (this *Event) AddTrigger(trigger observer.Trigger) {
 }
 
 func (this *Event) Announce(announcer observer.Trigger) {
+	fmt.Println("Going to check it all")
 	for trigger, _ := range this.triggers {
 		if trigger.GetId() == announcer.GetId() {
 			this.triggers[trigger] = true

@@ -2,6 +2,7 @@ package testalarmclock
 
 import (
 	"fmt"
+	"time"
 	//	"os"
 	//	"time"
 	//	"github.com/stianeikeland/go-rpio"
@@ -61,7 +62,7 @@ func (this *TestAlarmClock) BuzzerWork() {
 }
 
 func (this *TestAlarmClock) Activate() error {
-	fmt.Println("run")
+	fmt.Println(time.Now(), "run")
 	return nil
 	//	if err := this.rpio.Open(); err != nil {
 	//		fmt.Println(err)
